@@ -4,10 +4,12 @@
 
 # Makefile prerequisites
 *.d
+dep/
 
 # Compiled object files
 *.o
 *.obj
+obj/
 
 # Precompiled headers
 *.gch
