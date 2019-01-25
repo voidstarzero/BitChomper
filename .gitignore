@@ -1,28 +1,25 @@
-# Prerequisites
+# Diff output
+*.patch
+*.diff
+
+# Makefile prerequisites
 *.d
 
-# Compiled Object files
-*.slo
-*.lo
+# Compiled object files
 *.o
 *.obj
 
-# Precompiled Headers
+# Precompiled headers
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# Compiled dynamic libraries
 *.so
+*.so.*
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
+# Compiled static libraries
 *.a
 *.lib
 
@@ -30,3 +27,7 @@
 *.exe
 *.out
 *.app
+
+# Binary blobs
+*.bin
+*.dump
