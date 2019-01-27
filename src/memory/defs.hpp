@@ -1,9 +1,9 @@
-#ifndef SHA256GUARD_8a9eb92f620774060220ef6287ac1762945ba5ef2e9e38314c395812b5530463
-#define SHA256GUARD_8a9eb92f620774060220ef6287ac1762945ba5ef2e9e38314c395812b5530463
+#ifndef SHA256GUARD_e828da8d5a234d604a5c33413553b90cf830e4e5170337606f70431d08237934
+#define SHA256GUARD_e828da8d5a234d604a5c33413553b90cf830e4e5170337606f70431d08237934
 
 // =======================================================================
 //
-//  types.hpp -- Important typedefs for the whole project
+//  defs.hpp -- Definitions for the memory subsystem
 //
 // -----------------------------------------------------------------------
 //
@@ -27,24 +27,30 @@
 //
 // =======================================================================
 
-#include <cstdint>
+#include "../types.hpp"
 
-namespace Types
+namespace Memory
 {
-    using Byte = uint8_t;
-    using Dbyte = uint16_t;
-    using Qbyte = uint32_t;
+    using namespace Types;
 
-    // Used by the vCPU and registers for native-sized data
-    using Word = Qbyte; // vCPU uses 32-bit words
-    constexpr int WORD_BITS = sizeof(Word) * 8;
+    constexpr int PAGE_BITS = 16;
+    constexpr Size NUM_PAGES = 1 << PAGE_BITS; // 64 ki pages
 
-    // Used to refer to individual vRAM units
-    using Cell = Byte; // vCPU memory is byte-addressable
-    using Address = Word;
-    constexpr int ADDRESS_BITS = sizeof(Address) * 8;
+    constexpr int OFFSET_BITS = 16;
+    constexpr Size PAGE_SIZE = 1 << OFFSET_BITS; // 64 kiB pages
 
-    using Size = Address; // Size type for objects in vCPU memory
+    static_assert(PAGE_BITS + OFFSET_BITS == ADDRESS_BITS,
+                  "Address bits must be split between page and offset");
+
+    constexpr inline Size parent_page(Address loc)
+    {
+        return loc >> OFFSET_BITS;
+    }
+
+    constexpr inline Size page_offset(Address loc)
+    {
+        return loc & (PAGE_SIZE - 1);
+    }
 }
 
 #endif // SHA256GUARD
