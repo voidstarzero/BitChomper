@@ -26,7 +26,9 @@
 #
 # =======================================================================
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
+__metaclass__ = type
+
 from datetime import datetime
 import hashlib
 import os
@@ -51,31 +53,38 @@ def usage(prog_name):
 # Handler.postheader: output for after the copyright section
 # Handler.commentchars: symbols to precede every line in the copyright section
 
-class PythonHandler(object):
+class PythonHandler:
     def __init__(self, fname):
         self.preheader = "#!/usr/bin/env python\n"
-        self.postheader = (
-            "\nfrom __future__ import print_function\n\n# TODO: File contents..."
-        )
+        self.postheader = """
+from __future__ import print_function, unicode_literals
+__metaclass__ = type
+
+# TODO: File contents..."""
         self.commentchars = "#"
 
-class ShellHandler(object):
+class ShellHandler:
     def __init__(self, fname):
         self.preheader = "#!/bin/sh\n"
         self.postheader = "\n# TODO: File contents..."
         self.commentchars = "#"
 
-class MsBatchHandler(object):
+class MsBatchHandler:
     def __init__(self, fname):
         self.preheader = "@echo off\n"
         self.postheader = "\nREM TODO: File contents..."
         self.commentchars = "REM"
 
-class CxxHeaderHandler(object):
+class CxxHeaderHandler:
     def __init__(self, fname):
         timestamp = str(datetime.now())
 
         h = hashlib.sha256()
+
+        if sys.version_info[0] > 2:
+            fname = fname.encode()
+            timestamp = timestamp.encode()
+
         h.update(fname)
         h.update(timestamp)
 
@@ -86,14 +95,14 @@ class CxxHeaderHandler(object):
         self.postheader = "\n// TODO: File contents...\n\n#endif // SHA256GUARD"
         self.commentchars = "//"
 
-class CxxSourceHandler(object):
+class CxxSourceHandler:
     def __init__(self, fname):
         self.preheader = ""
         self.postheader = "\n// TODO: File contents..."
         self.commentchars = "//"
 
 # A file that uses # comments but requires no preambles of any kind
-class BareHandler(object):
+class BareHandler:
     def __init__(self, fname):
         self.preheader = ""
         self.postheader = "\n# TODO: File contents..."
